@@ -74,11 +74,11 @@ const keys = {
 
 let lastKey = ''
 const map = [
-  ['-','-','-','-','-','-'],
-  ['-',' ',' ',' ',' ','-'],
-  ['-',' ','-','-',' ','-'],
-  ['-',' ',' ',' ',' ','-'],
-  ['-','-','-','-','-','-'],
+  ['-','-','-','-','-','-','-'],
+  ['-',' ',' ',' ',' ',' ','-'],
+  ['-',' ','-',' ','-',' ','-'],
+  ['-',' ',' ',' ',' ',' ','-'],
+  ['-','-','-','-','-','-','-']
 ]
 map.forEach((row,i) => {
   row.forEach((symbol,j) => {
@@ -97,30 +97,29 @@ map.forEach((row,i) => {
   })
 })
 
+function circleCollidesWithRectangle({circle,rectangle}) {
+  return(
+    circle.position.y - circle.radius + circle.velocity.y
+        <= rectangle.position.y + rectangle.height && circle.position.x + circle.radius  + circle.velocity.x
+        >= rectangle.position.x && circle.position.y + circle.radius + circle.velocity.y
+        >= rectangle.position.y && circle.position.x - circle.radius + circle.velocity.x
+        <= rectangle.position.x + rectangle.width
+  )
+} 
+
 function animate(){
   requestAnimationFrame(animate)
   c.clearRect(0,0,canvas.width,canvas.height)
-  boundaries.forEach((boundary) => {
-      boundary.draw()
-
-      if(player.position.y - player.radius <= boundary.
-        position.y + boundary.height && player.position.x +
-        player.radius >= boundary.position.x && player.position.y +
-        player.radius >= boundary.position.y && player.position.x -
-        player.radius <= boundary.position.x + boundary.width)
-      
-      {
-        console.log('has chocado')
-      }
-  }) 
-
-  player.update()
-  player.velocity.x =0
-  player.velocity.y =0
-
-
+  
   if(keys.w.pressed && lastKey === 'w'){
-    player.velocity.y =-5
+  
+    if(circleCollidesWithRectangle({
+      circle:player,
+      rectangle: boundary
+    })
+    ){
+      player.velocity.y =-5
+    }
   }else if(keys.a.pressed  && lastKey === 'a'){
     player.velocity.x =-5
   }else if(keys.s.pressed  && lastKey === 's'){
@@ -128,6 +127,24 @@ function animate(){
   }else if(keys.d.pressed  && lastKey === 'd'){
     player.velocity.x =5
   }
+
+ boundaries.forEach((boundary) => {
+      boundary.draw()
+      if(
+        circleCollidesWithRectangle({
+          circle: player,
+          rectangle: boundary
+        }){
+       ){
+        player.velocity.x =0
+        player.velocity.y =0
+      }
+  
+
+  player.update()
+  //player.velocity.x =0
+  //player.velocity.y =0
+
 }
 
 animate()
