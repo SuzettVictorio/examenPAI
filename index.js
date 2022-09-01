@@ -37,14 +37,13 @@ class Player{
       c.fill()
     c.closePath()
   }
+  update(){
+    this.draw()
+    this.position.x += this.velocity.x
+    this.position.y += this.velocity.y
+  }
 }
-const map = [
-  ['-','-','-','-','-','-'],
-  ['-',' ',' ',' ',' ','-'],
-  ['-',' ','-','-',' ','-'],
-  ['-',' ',' ',' ',' ','-'],
-  ['-','-','-','-','-','-'],
-]
+
 
 const boundaries = []
 const player = new Player({
@@ -58,6 +57,29 @@ const player = new Player({
   }
 })
 
+const keys = {
+  w:{
+    pressed: false
+  },
+  a:{
+    pressed: false
+  },
+  s:{
+    pressed: false
+  },
+  d:{
+    pressed: false
+  }
+}
+
+let lastKey = ''
+const map = [
+  ['-','-','-','-','-','-'],
+  ['-',' ',' ',' ',' ','-'],
+  ['-',' ','-','-',' ','-'],
+  ['-',' ',' ',' ',' ','-'],
+  ['-','-','-','-','-','-'],
+]
 map.forEach((row,i) => {
   row.forEach((symbol,j) => {
       switch(symbol){
@@ -75,29 +97,82 @@ map.forEach((row,i) => {
   })
 })
 
-boundaries.forEach((boundary) => {
-    boundary.draw()
-})  
+function animate(){
+  requestAnimationFrame(animate)
+  c.clearRect(0,0,canvas.width,canvas.height)
+  boundaries.forEach((boundary) => {
+      boundary.draw()
 
-player.draw()
+      if(player.position.y - player.radius <= boundary.
+        position.y + boundary.height && player.position.x +
+        player.radius >= boundary.position.x && player.position.y +
+        player.radius >= boundary.position.y && player.position.x -
+        player.radius <= boundary.position.x + boundary.width)
+      
+      {
+        console.log('has chocado')
+      }
+  }) 
+
+  player.update()
+  player.velocity.x =0
+  player.velocity.y =0
+
+
+  if(keys.w.pressed && lastKey === 'w'){
+    player.velocity.y =-5
+  }else if(keys.a.pressed  && lastKey === 'a'){
+    player.velocity.x =-5
+  }else if(keys.s.pressed  && lastKey === 's'){
+    player.velocity.y =5
+  }else if(keys.d.pressed  && lastKey === 'd'){
+    player.velocity.x =5
+  }
+}
+
+animate()
 
 addEventListener('keydown',({key})=>{
-  console.log(key)
   switch (key){
-    case 'w':
-      player.velocity.y =-5
+      case 'w':
+        keys.w.pressed = true
+        lastKey = 'w'
       break
       case 'a':
-        player.velocity.x =-5
+        keys.a.pressed = true 
+        lastKey = 'a'
         break
       case 's':
-        player.velocity.y =5
+        keys.s.pressed = true 
+        lastKey = 's'
         break
       case 'd':
-        player.velocity.x =5
+        keys.d.pressed = true
+        lastKey = 'd'  
         break
   }
-  console.log(player.velocity)
+  console.log(keys.d.pressed)
+  console.log(keys.s.pressed)
+})
+
+addEventListener('keyup',({key})=>{
+  console.log(key)
+  switch (key){
+      case 'w':
+        keys.w.pressed = false
+      break
+      case 'a':
+        keys.a.pressed = false
+        break
+      case 's':
+        keys.s.pressed = false
+        break
+      case 'd':
+        keys.d.pressed = false
+        break
+  }
+  console.log(keys.d.pressed)
+  console.log(keys.s.pressed)
 })
 
 
