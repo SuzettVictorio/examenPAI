@@ -13,13 +13,14 @@ class Boundary{
         this.position = position 
         this.width = 40
         this.height = 40
+        this.image = image
     }
     
     draw(){
-        c.fillStyle = 'blue'
-        c.fillRect(this.position.x,
-            this.position.y,this.width,this.height)
-        
+        //c.fillStyle = 'blue'
+        //c.fillRect(this.position.x,
+        //this.position.y,this.width,this.height)
+        c.drawImage(this.image,this.position.x, this.position.y)
     }
 }
 
@@ -82,6 +83,9 @@ const map = [
   ['-',' ',' ',' ',' ',' ','-'],
   ['-','-','-','-','-','-','-']
 ]
+const image = new Image()
+image.src='./img/pipeHorizontal.png'
+
 map.forEach((row,i) => {
   row.forEach((symbol,j) => {
       switch(symbol){
@@ -91,7 +95,8 @@ map.forEach((row,i) => {
                       position:{
                           x:Boundary.width*j,
                           y:Boundary.height*i
-                      }
+                      },
+                      image: image
                   })
               )
               break
